@@ -43,7 +43,6 @@ export default function Login() {
 
   return (
     <ImageBackground
-      // eslint-disable-next-line no-undef
       source={require('../../assets/bg.jpg')} 
       style={styles.background} 
     >

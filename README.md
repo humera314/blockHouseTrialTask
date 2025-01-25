@@ -15,7 +15,7 @@ Clone this repository to your local machine by running:
 
 ```bash
 git https://github.com/humera314/blockHouseTrialTask.git
-cd TrialTask
+cd blockHouseTrialTask
 # Install project dependencies
 npm install
 

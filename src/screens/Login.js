@@ -43,6 +43,7 @@ export default function Login() {
 
   return (
     <ImageBackground
+      // eslint-disable-next-line no-undef
       source={require('../../assets/bg.jpg')} 
       style={styles.background} 
     >
@@ -79,7 +80,7 @@ export default function Login() {
           {/* Sign Up Link */}
           <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
             <Text style={styles.link}>
-              Don't have an account? <Text style={styles.linkText}>Sign Up</Text>
+                Do not have an account? <Text style={styles.linkText}>Sign Up</Text>
             </Text>
           </TouchableOpacity>
           

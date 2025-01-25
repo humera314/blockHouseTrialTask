@@ -1,0 +1,66 @@
+name: React Native CI/CD
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the 'main' branch
+  pull_request:
+    branches:
+      - main  # Trigger on pull requests to 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code from the repository
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.20.6'  # Specify the version of Node.js
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          npm install
+          npx pod-install --project-directory ios  # Install iOS dependencies (CocoaPods)
+
+      # Run ESLint to check code quality
+      - name: Run ESLint
+        run: |
+          npm install eslint --save-dev  # Install ESLint locally if not installed globally
+          npx eslint . --ext .js,.jsx,.ts,.tsx  # Run ESLint on JavaScript and TypeScript files
+          
+      # Run tests using Jest (or any other testing framework you are using)
+      - name: Run Tests
+        run: npm test  # This assumes you have tests set up with Jest
+
+      # Build APK for Android
+      - name: Build APK (Android)
+        run: |
+          cd android
+          ./gradlew assembleRelease  # Build the release APK for Android
+
+      # Build IPA for iOS
+      - name: Build IPA (iOS)
+        run: |
+          cd ios
+          xcodebuild -workspace YourApp.xcworkspace -scheme YourApp -configuration Release -sdk iphoneos -archivePath $PWD/build/YourApp.xcarchive archive  # Build the iOS app (replace "YourApp" with your app's name)
+
+      # Upload APK to GitHub Artifacts
+      - name: Upload APK to Artifacts
+        uses: actions/upload-artifact@v3  # Use v3 to avoid deprecated versions
+        with:
+          name: android-apk
+          path: android/app/build/outputs/apk/release/app-release.apk  # Path to the built APK
+
+      # Upload IPA to GitHub Artifacts
+      - name: Upload IPA to Artifacts
+        uses: actions/upload-artifact@v3  # Use v3 to avoid deprecated versions
+        with:
+          name: ios-ipa
+          path: ios/build/YourApp.xcarchive/Products/Applications/YourApp.app  # Path to the built IPA (replace "YourApp" with your app's name)
